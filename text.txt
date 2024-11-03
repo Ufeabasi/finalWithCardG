@@ -1,0 +1,1 @@
+the progress bar for the app task section is not working

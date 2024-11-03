@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Task List for Play and Earn Game</title>
+    <style>
+        /* General styling */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: white;
+            max-width: 400px;
+            margin: 0 auto;
+            padding: 10px;
+        }
+
+        h1 {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        /* Task List styling */
+        .task-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .task {
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            margin: 10px 0;
+            padding: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .task.completed {
+            background-color: #3a3a3a;
+            text-decoration: line-through;
+            color: gray;
+        }
+
+        .task button {
+            background-color: #007AFF;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+
+        .task button:hover {
+            background-color: #005bb5;
+        }
+
+        /* Progress Bar styling */
+        .progress {
+            margin: 20px 0;
+            text-align: center;
+        }
+
+        .progress-bar {
+            background-color: #007AFF;
+            height: 20px;
+            border-radius: 10px;
+            transition: width 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+    <h1>Task List</h1>
+    <ul class="task-list">
+        <li class="task">
+            <span>Complete 5 battles</span>
+            <button onclick="completeTask(this)">Complete</button>
+        </li>
+        <li class="task">
+            <span>Earn 100 coins</span>
+            <button onclick="completeTask(this)">Complete</button>
+        </li>
+        <li class="task">
+            <span>Invite a friend</span>
+            <button onclick="completeTask(this)">Complete</button>
+        </li>
+        <li class="task">
+            <span>Collect daily reward for 7 days</span>
+            <button onclick="completeTask(this)">Complete</button>
+        </li>
+    </ul>
+    
+    <div class="progress">
+        <div class="progress-bar" id="progress-bar" style="width: 0;"></div>
+        <p id="progress-text">0/4 Tasks Completed</p>
+    </div>
+
+    <script>
+        const totalTasks = document.querySelectorAll('.task').length;
+
+        function completeTask(button) {
+            const taskItem = button.parentElement;
+            taskItem.classList.toggle('completed');
+
+            // Update progress
+            updateProgress();
+        }
+
+        function updateProgress() {
+            const completedTasks = document.querySelectorAll('.task.completed').length;
+            const progressBar = document.getElementById('progress-bar');
+            const progressText = document.getElementById('progress-text');
+
+            // Calculate progress percentage
+            const progressPercentage = (completedTasks / totalTasks) * 100;
+
+            // Update progress bar and text
+            progressBar.style.width = progressPercentage + '%';
+            progressText.textContent = `${completedTasks}/${totalTasks} Tasks Completed`;
+        }
+    </script>
+</body>
+</html>

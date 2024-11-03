@@ -1,0 +1,146 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Game with Attempt Limits</title>
+  <style>
+    body {
+      font-family: Arial, sans-serif;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      height: 100vh;
+      margin: 0;
+    }
+    .container {
+      text-align: center;
+    }
+    .energy-bar-container {
+      width: 200px;
+      height: 30px;
+      background-color: #ddd;
+      margin: 10px auto;
+      border-radius: 5px;
+    }
+    .energy-bar {
+      height: 100%;
+      width: 0;
+      background-color: #4caf50;
+      border-radius: 5px;
+      transition: width 0.3s ease;
+    }
+    .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      margin-top: 10px;
+      cursor: pointer;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h1>Game Level Progression</h1>
+    <p id="level">Level: Normal</p>
+    <p id="score">Score: 0</p>
+    <p id="attempts">Attempts Left: 3</p>
+    <div class="energy-bar-container">
+      <div class="energy-bar" id="energyBar"></div>
+    </div>
+    <button class="btn" id="playBtn" onclick="playGame()">Play Game</button>
+    <div id="lockoutOptions" style="display: none;">
+      <p>You have used all attempts. Please wait 3 hours or choose an option:</p>
+      <button class="btn" onclick="watchAd()">Watch Ad</button>
+      <p id="timer"></p>
+    </div>
+  </div>
+
+  <script>
+    // Levels with specific score requirements
+    const levels = [
+      { name: "Normal", scoreNeeded: 0 },
+      { name: "Bronze", scoreNeeded: 10 },
+      { name: "Silver", scoreNeeded: 25 },
+      { name: "Gold", scoreNeeded: 45 },
+      { name: "Platinum", scoreNeeded: 60 }
+    ];
+    
+    let currentScore = 0;
+    let currentLevelIndex = 0;
+    let attemptsLeft = 3;
+    const scorePerPlay = 2;
+    const lockoutTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+    let lockoutEndTime = null;
+
+    // Function to play the game
+    function playGame() {
+      if (attemptsLeft <= 0) {
+        startLockout();
+        return;
+      }
+
+      currentScore += scorePerPlay;
+      document.getElementById("score").textContent = `Score: ${currentScore}`;
+      
+      // Check if the player has reached the next level
+      if (currentScore >= levels[currentLevelIndex + 1]?.scoreNeeded) {
+        currentLevelIndex++;
+        document.getElementById("level").textContent = `Level: ${levels[currentLevelIndex].name}`;
+        currentScore = levels[currentLevelIndex].scoreNeeded;
+      }
+      
+      // Update energy bar
+      const levelThreshold = levels[currentLevelIndex + 1]?.scoreNeeded || currentScore + 10;
+      const progress = ((currentScore - levels[currentLevelIndex].scoreNeeded) / (levelThreshold - levels[currentLevelIndex].scoreNeeded)) * 100;
+      document.getElementById("energyBar").style.width = `${progress}%`;
+
+      // Decrease attempts
+      attemptsLeft--;
+      document.getElementById("attempts").textContent = `Attempts Left: ${attemptsLeft}`;
+
+      // If no attempts left, start lockout
+      if (attemptsLeft === 0) {
+        startLockout();
+      }
+    }
+
+    // Start lockout period
+    function startLockout() {
+      lockoutEndTime = Date.now() + lockoutTime;
+      document.getElementById("playBtn").disabled = true;
+      document.getElementById("lockoutOptions").style.display = "block";
+      updateTimer();
+    }
+
+    // Update lockout countdown timer
+    function updateTimer() {
+      const timeLeft = lockoutEndTime - Date.now();
+      if (timeLeft <= 0) {
+        resetAttempts();
+      } else {
+        const hours = Math.floor(timeLeft / (1000 * 60 * 60));
+        const minutes = Math.floor((timeLeft % (1000 * 60 * 60)) / (1000 * 60));
+        const seconds = Math.floor((timeLeft % (1000 * 60)) / 1000);
+        document.getElementById("timer").textContent = `Time remaining: ${hours}h ${minutes}m ${seconds}s`;
+        setTimeout(updateTimer, 1000);
+      }
+    }
+
+    // Watch ad option (resets attempts)
+    function watchAd() {
+      alert("Ad watched! Attempts reset.");
+      resetAttempts();
+    }
+
+    // Reset attempts
+    function resetAttempts() {
+      attemptsLeft = 3;
+      document.getElementById("attempts").textContent = `Attempts Left: ${attemptsLeft}`;
+      document.getElementById("playBtn").disabled = false;
+      document.getElementById("lockoutOptions").style.display = "none";
+      document.getElementById("timer").textContent = "";
+    }
+  </script>
+</body>
+</html>

@@ -1,0 +1,198 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Clone Design</title>
+    <style>
+        /* General styling */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #121212;
+            color: white;
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+            overflow-x: hidden;
+            padding: 20px 10px;
+        }
+
+        h2 {
+            font-size: 1.5em;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        /* Scrollable Cards Section */
+        .top-cards {
+            display: flex;
+            overflow-x: auto;
+            gap: 10px;
+            padding-bottom: 10px;
+        }
+
+        .top-cards::-webkit-scrollbar {
+            display: none; /* Hide scrollbar */
+        }
+
+        .card {
+            background-color: #3a3a3a;
+            border-radius: 10px;
+            padding: 20px;
+            min-width: 250px;
+            max-width: 250px;
+            min-height: 400px;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+        }
+
+        .card img {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            margin-bottom: 10px;
+        }
+
+        .card-title {
+            font-size: 1em;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .points {
+            color: #bbb;
+            font-size: 0.9em;
+        }
+
+        .card-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-top: 15px;
+        }
+
+        .open-button {
+            background-color: #000;
+            color: white;
+            padding: 8px 16px;
+            border-radius: 20px;
+            border: none;
+            font-size: 0.9em;
+            cursor: pointer;
+        }
+
+        /* Weekly Section */
+        .section-title {
+            margin-top: 20px;
+            font-size: 1.2em;
+            color: #ddd;
+        }
+
+        .weekly-card {
+            background-color: #2a2a2a;
+            border-radius: 10px;
+            padding: 15px;
+            margin-top: 10px;
+        }
+
+        /* Navigation */
+        .bottom-nav {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            right: 0;
+            background-color: #121212;
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 10px 0;
+            border-top: 1px solid #333;
+        }
+
+        .nav-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            color: #888;
+            font-size: 0.8em;
+        }
+
+        .nav-item.active {
+            color: white;
+        }
+
+        .nav-item img {
+            width: 24px;
+            height: 24px;
+            margin-bottom: 3px;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Header Section -->
+    <h2>Earn <span>88</span></h2>
+
+    <!-- Scrollable Top Cards Section -->
+    <div class="top-cards">
+        <div class="card">
+            <img src="https://via.placeholder.com/40" alt="icon">
+            <div class="card-title">The Open League S6E1 Quiz</div>
+            <div class="points">+1,000 BP</div>
+            <div class="card-footer">
+                <button class="open-button">Open</button>
+                <span>0/3</span>
+            </div>
+        </div>
+        <div class="card">
+            <img src="https://via.placeholder.com/40" alt="icon">
+            <div class="card-title">Second Activity</div>
+            <div class="points">+800 BP</div>
+            <div class="card-footer">
+                <button class="open-button">Open</button>
+                <span>0/5</span>
+            </div>
+        </div>
+        <!-- Add more cards if needed -->
+    </div>
+
+    <!-- Weekly Section -->
+    <div class="section-title">Weekly</div>
+    <div class="weekly-card">
+        <div class="card-title">Earn for checking socials</div>
+        <div class="points">+0/450 BP</div>
+        <div class="card-footer">
+            <button class="open-button">Open</button>
+            <span>0/5</span>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <div class="bottom-nav">
+        <div class="nav-item active">
+            <img src="https://via.placeholder.com/24" alt="Home icon">
+            <span>Home</span>
+        </div>
+        <div class="nav-item">
+            <img src="https://via.placeholder.com/24" alt="Earn icon">
+            <span>Earn</span>
+        </div>
+        <div class="nav-item">
+            <img src="https://via.placeholder.com/24" alt="Frens icon">
+            <span>Frens</span>
+        </div>
+        <div class="nav-item">
+            <img src="https://via.placeholder.com/24" alt="Wallet icon">
+            <span>Wallet</span>
+        </div>
+    </div>
+
+</body>
+</html>

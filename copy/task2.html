@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Dropee Rewards</title>
+  <link rel="stylesheet" href="style.css">
+</head>
+<style>
+    * {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: Arial, sans-serif;
+}
+
+body {
+  background-color: #121212;
+  color: #fff;
+}
+
+.container {
+  max-width: 400px;
+  margin: 20px auto;
+  padding: 10px;
+}
+
+header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 10px 0;
+  border-bottom: 1px solid #333;
+}
+
+header h1 {
+  font-size: 1.5em;
+}
+
+.task-list {
+  margin-top: 20px;
+}
+
+.task-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px;
+  background-color: #1e1e1e;
+  border-radius: 10px;
+  margin-bottom: 10px;
+  cursor: pointer;
+  transition: background-color 0.2s;
+}
+
+.task-item:hover {
+  background-color: #333;
+}
+
+.icon {
+  width: 30px;
+  height: 30px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.icon.globe {
+  background-color: #3c8be7;
+}
+
+.icon.react {
+  background-color: #50b7f5;
+}
+
+.icon.like,
+.icon.follow,
+.icon.post {
+  background-color: #ff4d4f;
+}
+
+.icon.wallet {
+  background-color: #f0c400;
+}
+
+.task-details {
+  flex-grow: 1;
+  margin-left: 10px;
+}
+
+.task-details p {
+  font-size: 1em;
+  font-weight: 500;
+}
+
+.reward {
+  font-size: 0.9em;
+  color: #bbbbbb;
+}
+
+.arrow {
+  font-size: 1.2em;
+  color: #777;
+}
+
+</style>
+<body>
+  <div class="container">
+    <header>
+      <h1>Dropee</h1>
+    </header>
+    <div class="task-list">
+      <div class="task-item">
+        <div class="icon globe"></div>
+        <div class="task-details">
+          <p>Visit our website</p>
+          <span class="reward">+15,000</span>
+        </div>
+        <div class="arrow">&gt;</div>
+      </div>
+      <div class="task-item">
+        <div class="icon react"></div>
+        <div class="task-details">
+          <p>React to our latest post</p>
+          <span class="reward">+2,500</span>
+        </div>
+        <div class="arrow">&gt;</div>
+      </div>
+      <div class="task-item">
+        <div class="icon like"></div>
+        <div class="task-details">
+          <p>Like & RT this tweet</p>
+          <span class="reward">+7,500</span>
+        </div>
+        <div class="arrow">&gt;</div>
+      </div>
+      <div class="task-item">
+        <div class="icon follow"></div>
+        <div class="task-details">
+          <p>Follow Dropee on X</p>
+          <span class="reward">+7,500</span>
+        </div>
+        <div class="arrow">&gt;</div>
+      </div>
+      <div class="task-item">
+        <div class="icon post"></div>
+        <div class="task-details">
+          <p>Post about Dropee on X</p>
+          <span class="reward">+10,000</span>
+        </div>
+        <div class="arrow">&gt;</div>
+      </div>
+      <div class="task-item">
+        <div class="icon wallet"></div>
+        <div class="task-details">
+          <p>Connect TON wallet</p>
+          <span class="reward">+50,000</span>
+        </div>
+        <div class="arrow">&gt;</div>
+      </div>
+    </div>
+  </div>
+  <script src="script.js"></script>
+</body>
+</html>

@@ -1,0 +1,435 @@
+
+
+
+
+
+const cards = document.querySelectorAll(".card");
+const scoreDisplay = document.getElementById("score");
+const timeDisplay = document.getElementById('time');
+const startGameButton = document.getElementById("start-game");
+const commitScoreButton = document.getElementById("commit-score"); // New button to commit tempScore to score
+const closeMenuIcon = document.getElementById('closeMenuIcon');
+const closeMenuIconWin = document.getElementById('closeMenuIconWin');
+const closeAttemptMenuIcon = document.getElementById('closeAttemptMenuIcon')
+const winMenu = document.getElementById('slidingMenuWin');
+const failMenu = document.getElementById('slidingMenuFail');
+const exustedAttempt = document.getElementById('attemptExusted');
+const attemptCount = document.getElementById('attempts');
+const tryAgainBtn = document.querySelector('.close');
+const winMenuScoreDisplay = document.getElementById("mainScore");
+const levelDisplay = document.getElementById('levelDisplay');
+const energyBar = document.getElementById('energy-bar');
+const topLevelNumDisplay = document.getElementById('top-level');
+const attemptExhaustedMenu = document.getElementById("attemptExhaustedMenu"); // New sliding menu
+const countdownTimerDisplay = document.getElementById("countdownTimer");
+const watchAdButton = document.getElementById("watchAdButton");
+
+
+
+let score = 0;
+let tempScore = 0; // Temporary score for the current round
+let allLevelsScore = 0; //This holds all the scores for the energy bar to use
+let timeLeft = 3;
+let matched = 0;
+let cardOne, cardTwo;
+let disableDeck = false;
+let timer;
+let isGameActive = false;
+let currentLevelIndex = 0;
+let currentEnergyIndex = 0;
+let attemptsLeft = 3;
+// const lockoutTime = 3 * 60 * 60 * 1000; // 3 hours in milliseconds
+const lockoutTime = 5 * 60 * 60 * 1000; // 5 hours in milliseconds
+let lockoutEndTime = null;
+let countdownInterval;
+let currentRound = 0; // Track the current round
+const totalRounds = 3; // Total rounds available
+
+const levels = [
+    { name: "Normal", scoreNeeded: 0 },
+    { name: "Bronze", scoreNeeded: 100 },
+    { name: "Silver", scoreNeeded: 300 },
+    { name: "Gold", scoreNeeded: 400 },
+    { name: "Platinum", scoreNeeded: 2000 }
+];
+
+
+const levelTargets = [100, 200, 300, 400, 550]; // Energy needed per level
+
+
+
+
+
+
+
+
+
+
+
+
+function updateAttempts() {
+    attemptCount.textContent = attemptsLeft;
+    
+    if (attemptsLeft === -1) {
+        currentRound++;
+        if (currentRound < totalRounds) {
+            // If it's not the last round, reset attempts for the next round
+            attemptsLeft = 3; // Reset attempts for the next round
+            alert("You have completed this round! You can continue to the next round.");
+            updateAttempts(); // Update display
+        } else {
+            // If it is the last round, start lockout countdown
+            lockoutEndTime = Date.now() + lockoutTime;
+            startLockout();
+        }
+    }
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+// Function to update attempts display and handle lockout
+// function updateAttempts() {
+//     attemptCount.textContent = attemptsLeft;
+//     if (attemptsLeft === 0) {
+//         lockoutEndTime = Date.now() + lockoutTime;
+//         startLockout();
+//     }
+// }
+
+// Lockout countdown logic
+function startLockout() {
+    startGameButton.disabled = true; // Disable the start button
+    showSlidingMenu(); // Show the slide-up menu
+
+    countdownInterval = setInterval(() => {
+        const timeRemaining = lockoutEndTime - Date.now();
+        if (timeRemaining <= 0) {
+            clearInterval(countdownInterval);
+            countdownTimerDisplay.textContent = "You can now play!";
+            startGameButton.disabled = false;
+
+            // attemptExhaustedMenu.classList.add('active');
+            // closeAttemptMenuIcon.addEventListener('click', () => {
+            //     attemptExhaustedMenu.classList.remove('active');
+            // })
+        } else {
+            updateCountdownDisplay(timeRemaining);
+            console.log(countdownTimerDisplay)
+        }
+    }, 1000);
+}
+
+// Update countdown display
+function updateCountdownDisplay(timeRemaining) {
+    const hours = String(Math.floor(timeRemaining / (1000 * 60 * 60))).padStart(2, '0');
+    const minutes = String(Math.floor((timeRemaining % (1000 * 60 * 60)) / (1000 * 60))).padStart(2, '0');
+    const seconds = String(Math.floor((timeRemaining % (1000 * 60)) / 1000)).padStart(2, '0');
+    countdownTimerDisplay.textContent = `You can play again in: ${hours}:${minutes}:${seconds}`;
+}
+
+
+
+// Show sliding menu when attempts are exhausted
+function showSlidingMenu() {
+    attemptExhaustedMenu.classList.add("active");
+
+    closeAttemptMenuIcon.addEventListener('click', () => {
+        attemptExhaustedMenu.classList.remove('active');
+        failMenu.classList.remove('active');
+        winMenu.classList.remove('active');
+    });
+}
+
+// Hide sliding menu
+function hideSlidingMenu() {
+    attemptExhaustedMenu.classList.remove("active");
+}
+
+// Event listener for the ad button to restore attempts
+watchAdButton.addEventListener("click", () => {
+    restoreAttempts();
+    hideSlidingMenu(); // Hide menu after watching ad
+    clearInterval(countdownInterval); // Stop countdown
+    startGameButton.disabled = false; // Re-enable the start button
+    updateAttempts();
+});
+
+// Restore attempts after watching an ad
+function restoreAttempts() {
+    attemptsLeft = 3; // Restore all attempts
+    alert("Attempts fully restored! You can play again.");
+}
+
+
+
+
+
+
+
+
+
+
+
+
+function startTimer() {
+    clearInterval(timer);
+    timeLeft = 3;
+    timeDisplay.innerText = timeLeft;
+
+    timer = setInterval(() => {
+        timeLeft--;
+        timeDisplay.innerText = timeLeft;
+        if (tempScore <= 0 && timeLeft <= 0) {
+            clearInterval(timer);
+
+
+            failMenu.classList.add('active');
+            closeMenuIcon.addEventListener('click', () => {
+                failMenu.classList.remove('active');
+            });
+
+            tryAgainBtn.addEventListener('click', () => {
+                winMenu.classList.remove('active');
+                failMenu.classList.remove('active');
+                // winMenu.classList.remove('active');
+            });
+
+
+            shuffleCard();
+            resetGame();
+            startGameButton.disabled = false;
+            isGameActive = false;
+        } else if (timeLeft <= 0 && tempScore >= 0) {
+            clearInterval(timer);
+
+            winMenu.classList.add('active');
+
+
+            closeMenuIconWin.addEventListener('click', () => {
+                winMenu.classList.remove('active');
+                failMenu.classList.remove('active');
+
+                shuffleCard();
+                resetGame();
+                startGameButton.disabled = false;
+                isGameActive = false;
+            }); 
+
+
+            shuffleCard();
+            resetGame();
+            startGameButton.disabled = false;
+            isGameActive = false;
+        }
+    }, 1000);
+}
+
+function flipCard({ target: clickedCard }) {
+    if (!isGameActive) {
+        alert("Please click 'Start Game' to begin!");
+        return;
+    }
+    if (cardOne !== clickedCard && !disableDeck) {
+        clickedCard.classList.add("flip");
+        if (!cardOne) {
+            cardOne = clickedCard;
+            return;
+        }
+        
+        cardTwo = clickedCard;
+        disableDeck = true;
+        let cardOneImg = cardOne.querySelector(".back-view img").src;
+        let cardTwoImg = cardTwo.querySelector(".back-view img").src;
+        matchCards(cardOneImg, cardTwoImg);
+    }
+}
+
+
+function matchCards(img1, img2) {
+    if (img1 === img2) {
+        matched++;
+        const scoreForMatch = calculateScore(matched); // Calculate score for the match
+        tempScore += scoreForMatch; // Update tempScore for display if needed
+        allLevelsScore += scoreForMatch; // Add directly to cumulative score
+
+
+
+
+        scoreDisplay.innerText = score; // Display main score + tempScore
+        winMenuScoreDisplay.innerText = tempScore;
+        startTimer();
+
+        // Update energy bar based on new tempScore
+        updateEnergyBar();
+
+        if (matched == 8) {
+            setTimeout(() => {
+                shuffleCard();
+            }, 1000);
+        }
+
+        cardOne.removeEventListener("click", flipCard);
+        cardTwo.removeEventListener("click", flipCard);
+        resetSelection();
+    } else {
+        setTimeout(() => {
+            cardOne.classList.add("shake");
+            cardTwo.classList.add("shake");
+        }, 400);
+
+        setTimeout(() => {
+            cardOne.classList.remove("shake", "flip");
+            cardTwo.classList.remove("shake", "flip");
+            resetSelection();
+        }, 1200);
+    }
+}
+
+
+
+
+
+function resetSelection() {
+    cardOne = cardTwo = "";
+    disableDeck = false;
+    updateEnergyBar();
+}
+
+function calculateScore(matched) {
+    if (matched <= 2) return 10;
+    else if (matched <= 5) return 20;
+    else return 30;
+}
+
+function shuffleCard() {
+    matched = 0;
+    disableDeck = false;
+    cardOne = cardTwo = "";
+    let arr = [1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5, 6, 7, 8];
+    arr.sort(() => Math.random() > 0.5 ? 1 : -1);
+    cards.forEach((card, i) => {
+        card.classList.remove("flip");
+        let imgTag = card.querySelector(".back-view img");
+        imgTag.src = `images/img-${arr[i]}.png`;
+        card.addEventListener("click", flipCard);
+    });
+}
+
+// Function to update the energy bar based on score
+function updateEnergyBar() {
+    const currentTarget = levelTargets[currentEnergyIndex];
+    const progress = Math.min((allLevelsScore / currentTarget) * 100, 100); // Cap at 100%
+
+    energyBar.style.width = `${progress}%`;
+
+    // Check if the current level is completed
+    if (allLevelsScore >= currentTarget) {
+        levelUp();
+    }
+}
+
+// Function to handle leveling up
+function levelUp() {
+    if (currentEnergyIndex < levelTargets.length - 1) {
+        currentEnergyIndex++; // Move to the next level
+        tempScore = 0; // Reset temp score for the new level
+        energyBar.style.width = "0%"; // Reset energy bar
+        alert(`Congratulations! You've reached level ${levels[currentLevelIndex].name}.`);
+        
+    } else {
+        alert("You've reached the maximum level!");
+    }
+}
+
+function resetGame() {
+    scoreDisplay.innerText = score;
+    // allLevelsScore += tempScore;
+    matched = 0;
+    // tempScore = 0;
+    shuffleCard();
+    updateEnergyBar();
+    
+}
+
+function startGame() {
+    if (attemptsLeft > 0 && !isGameActive) {
+        isGameActive = true;
+        attemptsLeft--;
+        currentRound++;
+        updateAttempts();
+        matched = 0;
+        // attemptCount.textContent = attemptsLeft;
+        tempScore = 0;
+        scoreDisplay.innerText = score; // Display main score + tempScore
+        matched = 0;
+        shuffleCard();
+        startTimer();
+        startGameButton.disabled = true;
+        updateEnergyBar();
+    } else if (attemptsLeft === 0) {
+        showSlidingMenu(); // Show sliding menu if attempts are exhausted
+    }
+}
+
+// Commit Score function - Adds tempScore to main score when button is clicked
+function commitScore() {
+    score += tempScore; // Add tempScore to the main score
+    tempScore = 0; // Reset tempScore
+    scoreDisplay.innerText = score; // Update score display
+    updateEnergyBar();
+    checkLevelUp();
+    isGameActive = false;
+}
+
+function checkLevelUp() {
+    for (let i = levels.length - 1; i >= 0; i--) {
+        if (score >= levels[i].scoreNeeded) {
+            if (currentLevelIndex !== i) {
+                currentLevelIndex = i;
+                topLevelNumDisplay.innerText = currentLevelIndex;
+                alert(`Congratulations! You have reached the ${levels[i].name} level!`)
+            }
+            break;
+        }
+    }
+    levelDisplay.innerText = levels[currentLevelIndex].name;
+}
+
+// End Game function
+function endGame() {
+    clearInterval(timer);
+    resetGame();
+    isGameActive = false;
+}
+
+// Event listeners for buttons
+startGameButton.addEventListener('click', startGame);
+commitScoreButton.addEventListener('click', commitScore); // New listener for commit button
+// closeMenuSlide.addEventListener('click', failMenu.classList.remove('active'))
+
+// function startLockOut() {
+//     exustedAttempt.classList.add('active');
+//     lockoutEndTime = Date.now() + lockoutTime;
+//     startGameButton.disabled = true;
+// }
+
+
+
+
+  

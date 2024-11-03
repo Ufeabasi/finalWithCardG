@@ -1,0 +1,311 @@
+.energy-bar-container {
+width: 100%;
+height: 12px;
+background-color: #29292b; /* Background color of the container */
+border-radius: 5px;
+overflow: hidden;
+border: 2px solid gray;
+// margin:0px 12px;
+}
+
+/* Inner energy level */
+.energy-bar {
+height: 100%;
+width: 0; /* Adjust this to represent the energy level (e.g., 75%) */
+background-color: #131fc9; /* Green color for energy */
+transition: width 0.3s ease-in-out;
+}
+
+
+.game-top-details {
+    padding-top: 25px;
+
+    .username {
+        font-size: 1rem;
+        font-weight: bold;
+        margin-bottom: 3px;
+    }
+    .game-level-details {
+        margin: auto 5px;
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        padding-bottom: 5px;
+        .level, .level-badge {
+            display: flex;
+            flex-direction: row;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.9rem;
+            font-weight: bold;
+            img {
+                height: 30px;
+                width:30px;
+                object-fit: cover;
+            }
+            .badge {
+                margin-left: 5px;
+            }
+
+        }
+    }
+}
+
+
+.game-details {
+    margin-top: 20px;
+    // margin-bottom: 20px;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    .digits {
+        font-size: 1.1rem;
+        font-weight: bold;
+    }
+    .game-details-title {
+        font-size: 0.69rem;
+        color: rgb(136, 134, 134);
+        font-weight: bold;
+        padding-bottom: 5px;
+    }
+    .next-level, .current-score, .attempt-left {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        text-align: center;
+        align-items: center;
+        background-color: $eerie-black;
+        padding: 10px 15px;
+        border-radius: 5px;
+    }
+    .next-level, .attempt-left {
+        padding: 0px 25px;
+    }
+}
+.game-timer {
+    // display: flex;
+    // flex-direction: column;
+    // justify-content: center;
+    text-align: center;
+    // align-items: center;
+    background-color: $eerie-black;
+    padding: 10px 15px;
+    border-radius: 5px;
+    margin: 10px 70px;
+}
+
+
+// GAME SECTION STARTS HERE
+    
+.wrapper{
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    padding: 50px 0px;
+    // border-radius: 10px;
+    // background: #F8F8F8;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    .cards, .card, .view{
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+    .cards{
+        // background-color: red;
+        height: 300px;
+        width: 350px;
+        flex-wrap: wrap;
+        justify-content: space-between;
+        padding: 15px;
+    }
+    .cards .card{
+        list-style: none;
+        user-select: none;
+        position: relative;
+        perspective: 1000px;
+        transform-style: preserve-3d;
+        height: calc(100% / 4 - 10px);
+        width: calc(100% / 4 - 10px);
+    }
+    .card.shake{
+        animation: shake 0.35s ease-in-out;
+    }
+    @keyframes shake {
+        0%, 100%{
+        transform: translateX(0);
+        }
+        20%{
+        transform: translateX(-13px);
+        }
+        40%{
+        transform: translateX(13px);
+        }
+        60%{
+        transform: translateX(-8px);
+        }
+        80%{
+        transform: translateX(8px);
+        }
+    }
+    .card {
+        .view {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            border-radius: 7px;
+            background: #fff;
+            pointer-events: none;
+            backface-visibility: hidden;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+            transition: transform 0.25s linear;
+        }
+        .front-view img{
+            width: 19px;
+        }
+    }
+    .card .back-view img{
+        max-width: 30px;
+    }
+    .card .back-view{
+        transform: rotateY(-180deg);
+    }
+    .card.flip .back-view{
+        transform: rotateY(0);
+    }
+    .card.flip .front-view{
+        transform: rotateY(180deg);
+    }
+}
+
+
+
+.start-btn {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    background-color: $eerie-black;
+    //     border-style: none;
+    padding: 16px 24px;
+    border-radius: 5px;
+    
+}
+
+/* POP-UP FROM BOTTOM STYLE */
+
+
+.menu {
+    position: fixed;
+    bottom: -100%;
+    z-index: 200;
+    height: 50%;
+    left: 0;
+    /* Hide off-screen initially */
+    right: 0;
+    background-color: #2a2a2a;
+    color: white;
+    border-top-left-radius: 20px;
+    border-top-right-radius: 20px;
+    padding: 20px;
+    text-align: center;
+    transition: bottom 0.3s ease; /* Smooth transition */
+    box-shadow: 0 -2px 10px rgba(0, 0, 0, 0.3);
+
+    .pop-up-botton:hover {
+        background-color: #45a049;
+    }
+
+    .win-content, .fail-content {
+        img {
+            height: 55px;
+            width: 55px;
+            object-fit: cover;
+        }
+        .win-title, .fail-title {
+            font-size: 23px;
+            p {
+                padding-top: 2px;
+            }
+        }
+        .fail-title {
+            padding-top: 12px;
+            margin-bottom: 15px;
+        }
+    }
+
+
+    .win-actions {
+        display: flex;
+        padding-top: 12px;
+        flex-direction: column;
+        text-align: center;
+        justify-content: center;
+
+        .win-claim, .win-multiply, .fail-try {
+            background-color: $eerie-black;
+            color: white;
+            border-style: none;
+            padding: 12px;
+            margin: 5px 30px;
+            border-radius: 5px;
+            font-size: 1.2rem;
+        }
+        .win-multiply {
+            margin-top: 7px;
+        }
+    }
+
+}
+.menu.active {
+    bottom: 0; /* Slide up */
+}
+
+
+.close-icon {
+    position: absolute;
+    top: 15px;
+    right: 15px;
+    font-size: 25px;
+    color: rgb(218, 15, 15);
+    background: none;
+    border: none;
+    outline: none;
+}
+.pop-up-botton {
+        padding: 10px 20px;
+        font-size: 20px;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        transition: background-color 0.3s ease;
+    }
+
+
+// #closeMenuIconWin {
+//     padding: 10px 20px;
+//     font-size: 20px;
+//     color: white;
+//     border: none;
+//     border-radius: 5px;
+//     transition: background-color 0.3s ease;
+// }
+
+
+
+
+
+
+
+
+
+
+
+.game-button {
+  color: white;
+  margin-top: 15px;
+}
+
+
+
+
+    
